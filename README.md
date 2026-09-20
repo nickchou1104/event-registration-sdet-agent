@@ -14,6 +14,7 @@
 
 ## 專案目錄結構樹 (SDET Agent Architecture)
 
+```text
 Event-Registration-SDET-Architecture/
 ├── src/
 │   └── index.html                           # Part A: AI 生成的前端待測程式碼
