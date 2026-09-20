@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>活動報名表單</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fafb;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #374151;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        #totalAmountContainer {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2563eb;
+        }
+        #message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+        .success-msg {
+            background-color: #d1fae5;
+            color: #065f46;
+            display: block !important;
+        }
+        .error-msg {
+            background-color: #fee2e2;
+            color: #991b1b;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2 style="text-align: center; color: #111827; margin-top: 0;">活動報名表單</h2>
+    
+    <form id="registrationForm" novalidate>
+        <div class="form-group">
+            <label for="name">姓名 <span style="color:red;">*</span></label>
+            <input type="text" id="name" placeholder="請輸入真實姓名">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email <span style="color:red;">*</span></label>
+            <input type="email" id="email" placeholder="example@domain.com">
+        </div>
+
+        <div class="form-group">
+            <label for="ticketType">票種</label>
+            <select id="ticketType">
+                <option value="free">免費票</option>
+                <option value="paid">付費票 (NT$500)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="attendees">報名人數 (1-10)</label>
+            <input type="number" id="attendees" min="1" max="10" value="1">
+        </div>
+
+        <div id="totalAmountContainer">
+            總金額: NT$ <span id="totalPrice">0</span>
+        </div>
+
+        <button type="submit">送出報名</button>
+    </form>
+
+    <div id="message"></div>
+</div>
+
+<script>
+    const form = document.getElementById('registrationForm');
+    const ticketType = document.getElementById('ticketType');
+    const attendees = document.getElementById('attendees');
+    const totalAmountContainer = document.getElementById('totalAmountContainer');
+    const totalPrice = document.getElementById('totalPrice');
+    const messageDiv = document.getElementById('message');
+
+    // 動態計算金額與顯示邏輯
+    function calculateTotal() {
+        if (ticketType.value === 'paid') {
+            totalAmountContainer.style.display = 'block';
+            totalPrice.textContent = attendees.value * 500;
+        } else {
+            totalAmountContainer.style.display = 'none';
+        }
+    }
+
+    ticketType.addEventListener('change', calculateTotal);
+    attendees.addEventListener('input', calculateTotal);
+
+    // 表單送出驗證
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // 阻擋表單預設重整行為
+        
+        // 清除先前的訊息
+        messageDiv.className = '';
+        messageDiv.textContent = '';
+
+        const nameVal = document.getElementById('name').value.trim();
+        const emailVal = document.getElementById('email').value.trim();
+        const attendeesVal = attendees.value;
+
+        // 1. 驗證必填欄位
+        if (nameVal === '') {
+            showMessage('請輸入姓名', 'error-msg');
+            return;
+        }
+
+        if (emailVal === '') {
+            showMessage('請輸入 Email', 'error-msg');
+            return;
+        }
+
+        // 2. 驗證 Email 格式 (簡易正則表達式)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailVal)) {
+            showMessage('Email 格式錯誤', 'error-msg');
+            return;
+        }
+
+        // 3. 驗證人數範圍
+        if (attendeesVal < 1 || attendeesVal > 10) {
+            showMessage('報名人數必須介於 1 到 10 之間', 'error-msg');
+            return;
+        }
+
+        // 驗證通過
+        showMessage('報名成功', 'success-msg');
+    });
+
+    function showMessage(text, className) {
+        messageDiv.textContent = text;
+        messageDiv.className = className;
+    }
+</script>
+
+</body>
+</html>
