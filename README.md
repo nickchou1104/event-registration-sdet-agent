@@ -91,22 +91,28 @@ docs/B2_Test_Cases_vX.md    Qase.io API               src/index.html (待測系�
 ```
 
 ## 自動化工作流執行指令 (LLM -> BDD 順序)
-## 0. 逆向分析前端程式碼，自動生成 Prompt 歷史紀錄
+**0. 逆向分析前端程式碼，自動生成 Prompt 歷史紀錄**
+```bash
 python3 ai_agents/generate_prompt_history.py
 
-## 1. 提煉規格與 B1 審查
+**1. 提煉規格與 B1 審查**
+```bash
 python3 ai_agents/extract_specs_to_feature.py
 
-## 2. 生成 BDD 案例並同步至 Qase
+**2. 生成 BDD 案例並同步至 Qase**
+```bash
 python3 ai_agents/generate_qase_bdd.py
 
-## 3. 靜態程式碼審查並自動產生 Bug Report
+**3. 靜態程式碼審查並自動產生 Bug Report**
+```bash
 python3 ai_agents/validate_and_report.py
 
-## 4. 深度對比需求與 Bug，自動生成 AI 協作反思報告
+**4. 深度對比需求與 Bug，自動生成 AI 協作反思報告**
+```bash
 python3 ai_agents/generate_reflection.py
 
-## *** 一鍵自動化執行 ***
+**一鍵自動化執行**
+```bash
 python3 ai_agents/run_pipeline.py
 
 
