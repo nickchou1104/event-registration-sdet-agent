@@ -92,7 +92,6 @@ docs/B2_Test_Cases_vX.md    Qase.io API               src/index.html (待測系�
 
 ## 自動化工作流執行指令 (LLM -> BDD 順序)
 
-```bash
 ## 0. 逆向分析前端程式碼，自動生成 Prompt 歷史紀錄
 python3 ai_agents/generate_prompt_history.py
 
@@ -111,6 +110,10 @@ python3 ai_agents/generate_reflection.py
 ## 一鍵自動化執行
 python3 ai_agents/run_pipeline.py
 
+---
+## 執行成果展示 (Execution Result)
+![Test Case 自動化生成與 Qase 同步結果](execution_result.jpg)
+---
 
 ## 如何執行待測系統
 1. 進入 `src` 目錄。
