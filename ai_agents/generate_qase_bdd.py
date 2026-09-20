@@ -39,12 +39,12 @@ def get_available_llms():
             #     google_api_key=google_key
             # )))
             llm_chain.append(("Google Gemini (2.5-Flash)", ChatGoogleGenerativeAI(
-                model="gemini-2.5-flash",  # 👈 改為 gemini-2.5-flash
+                model="gemini-2.5-flash",
                 temperature=0.2,
                 google_api_key=google_key
             )))
         except Exception as e:
-            print(f"⚠️ 無法初始化 Google Gemini: {e}")
+            print(f" 無法初始化 Google Gemini: {e}")
 
     # 2. 備援模型一：OpenAI GPT-4o
     openai_key = os.getenv("OPENAI_API_KEY")
@@ -57,7 +57,7 @@ def get_available_llms():
                 api_key=openai_key
             )))
         except Exception as e:
-            print(f"⚠️ 無法初始化 OpenAI: {e}")
+            print(f" 無法初始化 OpenAI: {e}")
 
     # 3. 備援模型二：Anthropic Claude
     anthropic_key = os.getenv("ANTHROPIC_API_KEY")
@@ -70,7 +70,7 @@ def get_available_llms():
                 api_key=anthropic_key
             )))
         except Exception as e:
-            print(f"⚠️ 無法初始化 Anthropic Claude: {e}")
+            print(f" 無法初始化 Anthropic Claude: {e}")
 
     return llm_chain
 
@@ -124,7 +124,7 @@ def save_cases_to_markdown(cases, output_path):
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("\n".join(md_content))
 
-    print(f"✅ 已成功將 {len(cases)} 個測試案例同步備份至: {output_path}")
+    print(f" 已成功將 {len(cases)} 個測試案例同步備份至: {output_path}")
 
 # =========================================================================
 # 步驟 1：向 Qase 抓取現有的 Suites (目錄) 清單
@@ -139,10 +139,10 @@ def get_existing_suites():
             suites_map = {item["title"]: item["id"] for item in entities}
             return suites_map
         else:
-            print(f"❌ 無法抓取 Qase 目錄，狀態碼: {response.status_code}")
+            print(f" 無法抓取 Qase 目錄，狀態碼: {response.status_code}")
             return {}
     except Exception as e:
-        print(f"❌ 抓取 Qase 目錄發生異常: {e}")
+        print(f" 抓取 Qase 目錄發生異常: {e}")
         return {}
 
 # =========================================================================
@@ -160,13 +160,13 @@ def create_new_suite(suite_title, parent_id=None):
         if response.status_code == 200:
             new_suite_id = response.json().get("result", {}).get("id")
             parent_msg = f" (建立於父目錄 ID: {parent_id} 之下)" if parent_id else " (建立於最外層)"
-            print(f"✅ [Qase] 成功建立新目錄: {suite_title} [ID: {new_suite_id}]{parent_msg}")
+            print(f" [Qase] 成功建立新目錄: {suite_title} [ID: {new_suite_id}]{parent_msg}")
             return new_suite_id
         else:
-            print(f"❌ 建立新目錄失敗: {response.text}")
+            print(f" 建立新目錄失敗: {response.text}")
             return None
     except Exception as e:
-        print(f"❌ 建立新目錄發生異常: {e}")
+        print(f" 建立新目錄發生異常: {e}")
         return None
 
 # =========================================================================
@@ -179,13 +179,13 @@ def push_case_to_qase(case_data):
         response = requests.post(url, json=case_data, headers=headers)
         if response.status_code == 200:
             case_id = response.json().get("result", {}).get("id")
-            print(f"  ✅ 成功寫入！Case ID: {QASE_PROJECT_CODE}-{case_id}")
+            print(f" 成功寫入！Case ID: {QASE_PROJECT_CODE}-{case_id}")
             return case_id
         else:
-            print(f"  ❌ 寫入失敗: {response.text}")
+            print(f" 寫入失敗: {response.text}")
             return None
     except Exception as e:
-        print(f"  ❌ 寫入發生異常: {e}")
+        print(f" 寫入發生異常: {e}")
         return None
 
 # =========================================================================
@@ -195,7 +195,7 @@ async def smart_ai_qa_orchestrator(spec_text, existing_suites, b2_output_path):
     llm_chain = get_available_llms()
 
     if not llm_chain:
-        print("❌ 未偵測到任何有效的 LLM API Key，請檢查 .env 設定。")
+        print(" 未偵測到任何有效的 LLM API Key，請檢查 .env 設定。")
         return False
 
     prompt = f"""
@@ -249,10 +249,10 @@ async def smart_ai_qa_orchestrator(spec_text, existing_suites, b2_output_path):
 
     raw_response_text = None
 
-    # 🔄 自動備援迴圈：依序試用可用的 LLM
+    # 自動備援迴圈：依序試用可用的 LLM
     for model_name, llm in llm_chain:
         try:
-            print(f"\n🤖 正在使用 【{model_name}】 分析需求並生成 Qase 案例...")
+            print(f"\n 正在使用 【{model_name}】 分析需求並生成 Qase 案例...")
             response = await llm.ainvoke(prompt)
 
             raw_content = response.content
@@ -262,13 +262,13 @@ async def smart_ai_qa_orchestrator(spec_text, existing_suites, b2_output_path):
                 raw_response_text = str(raw_content)
 
             if raw_response_text:
-                print(f"✅ 【{model_name}】 呼叫成功！")
+                print(f"【{model_name}】 呼叫成功！")
                 break
         except Exception as e:
-            print(f"⚠️ 【{model_name}】 呼叫失敗 ({e})，自動切換至下一個備援模型...")
+            print(f"【{model_name}】 呼叫失敗 ({e})，自動切換至下一個備援模型...")
 
     if not raw_response_text:
-        print("❌ 所有模型皆呼叫失敗，無法完成自動化任務。")
+        print(" 所有模型皆呼叫失敗，無法完成自動化任務。")
         return False
 
     # 解析與清理 JSON
@@ -286,8 +286,8 @@ async def smart_ai_qa_orchestrator(spec_text, existing_suites, b2_output_path):
         dir_decision = ai_response.get("directory_decision", {})
         cases = ai_response.get("test_cases", [])
 
-        print(f"🎯 AI 決策分析完成：[動作: {dir_decision.get('decision_action')}]")
-        print(f"📊 共生成了 {len(cases)} 個 Test Cases。")
+        print(f" AI 決策分析完成：[動作: {dir_decision.get('decision_action')}]")
+        print(f" 共生成了 {len(cases)} 個 Test Cases。")
 
         # 1. 備份到 docs/B2_Test_Cases_vX.md
         if cases:
@@ -305,18 +305,18 @@ async def smart_ai_qa_orchestrator(spec_text, existing_suites, b2_output_path):
             final_suite_id = create_new_suite(new_title, parent_id)
 
         if final_suite_id:
-            print(f"\n🚀 準備將 {len(cases)} 個測試案例批次寫入 Qase.io...")
+            print(f"\n 準備將 {len(cases)} 個測試案例批次寫入 Qase.io...")
             for idx, case_payload in enumerate(cases, 1):
                 case_payload["suite_id"] = final_suite_id
-                print(f"   👉 正在寫入第 {idx} 個 Case: {case_payload.get('title')}")
+                print(f" 正在寫入第 {idx} 個 Case: {case_payload.get('title')}")
                 push_case_to_qase(case_payload)
             return True
         else:
-            print("❌ 無法確定目標目錄 ID，自動化終止。")
+            print(" 無法確定目標目錄 ID，自動化終止。")
             return False
 
     except Exception as e:
-        print(f"❌ JSON 解析或 Qase 寫入過程中發生錯誤: {e}")
+        print(f" JSON 解析或 Qase 寫入過程中發生錯誤: {e}")
         return False
 
 # =========================================================================
@@ -335,13 +335,13 @@ async def main():
     b2_output_path = get_unique_filepath(docs_dir, "B2_Test_Cases")
 
     if not os.path.exists(rules_file):
-        print(f"❌ 找不到規則檔：{rules_file}。請確認它存在於專案目錄。")
+        print(f" 找不到規則檔：{rules_file}。請確認它存在於專案目錄。")
         return
 
     with open(rules_file, "r", encoding="utf-8") as f:
         base_rules = f.read()
 
-    print("🔍 正在從 Qase.io 讀取目前的目錄架構...")
+    print(" 正在從 Qase.io 讀取目前的目錄架構...")
     existing_suites = get_existing_suites()
     print(f"已偵測到現有目錄數: {len(existing_suites)} 個\n" + "-" * 40)
 
@@ -352,13 +352,13 @@ async def main():
     pending_files = [f for f in pending_files if not f.endswith(".processed")]
 
     if not pending_files:
-        print(f"⚠️ 在 {specs_dir}/ 中沒有找到任何待處理的需求檔。")
+        print(f" 在 {specs_dir}/ 中沒有找到任何待處理的需求檔。")
         return
 
-    print(f"📦 偵測到 {len(pending_files)} 個待處理需求檔，開始批次作業...\n")
+    print(f" 偵測到 {len(pending_files)} 個待處理需求檔，開始批次作業...\n")
 
     for file_path in pending_files:
-        print(f"📄 正在處理檔案: {file_path}")
+        print(f" 正在處理檔案: {file_path}")
         with open(file_path, "r", encoding="utf-8") as f:
             feature_req = f.read()
 
@@ -368,7 +368,7 @@ async def main():
 
         if success:
             os.rename(file_path, file_path + ".processed")
-            print(f"✅ {file_path} 處理完畢，已標記為 .processed\n" + "-" * 40)
+            print(f" {file_path} 處理完畢，已標記為 .processed\n" + "-" * 40)
 
 if __name__ == "__main__":
     asyncio.run(main())

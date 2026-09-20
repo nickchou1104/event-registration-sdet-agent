@@ -26,7 +26,7 @@ def extract_text_from_file(file_path):
                         full_text.append(cell.text)
             return "\n".join(full_text)
         except Exception as e:
-            print(f"❌ 讀取 Word 檔失敗 {file_path}: {e}")
+            print(f" 讀取 Word 檔失敗 {file_path}: {e}")
             return ""
 
     # 2. PDF 檔案 (.pdf)
@@ -41,7 +41,7 @@ def extract_text_from_file(file_path):
                     text_list.append(extracted)
             return "\n".join(text_list)
         except Exception as e:
-            print(f"❌ 讀取 PDF 檔失敗 {file_path}: {e}")
+            print(f" 讀取 PDF 檔失敗 {file_path}: {e}")
             return ""
 
     # 3. Markdown 或普通文字檔 (.md, .txt)
@@ -50,7 +50,7 @@ def extract_text_from_file(file_path):
             with open(file_path, "r", encoding="utf-8") as f:
                 return f.read()
         except Exception as e:
-            print(f"❌ 讀取文字檔失敗 {file_path}: {e}")
+            print(f" 讀取文字檔失敗 {file_path}: {e}")
             return ""
 
     return ""
@@ -140,7 +140,7 @@ async def summarize_spec_via_ai(file_name, raw_text):
 
         return content.strip()
     except Exception as e:
-        print(f"❌ AI 分析失敗: {e}")
+        print(f" AI 分析失敗: {e}")
         return ""
 
 # =========================================================================
@@ -169,29 +169,29 @@ async def main():
     pending_files = [f for f in all_files if "feature.md" not in f and not f.endswith(".processed")]
 
     if not pending_files:
-        print(f"⚠️ 在 {specs_dir}/ 中沒有找到任何需要提煉的原始 Spec 檔案。")
+        print(f" 在 {specs_dir}/ 中沒有找到任何需要提煉的原始 Spec 檔案。")
         return
 
-    print(f"📦 偵測到 {len(pending_files)} 個原始文件，開始一個個餵給 AI 進行 QA 視角精煉...\n")
+    print(f" 偵測到 {len(pending_files)} 個原始文件，開始一個個餵給 AI 進行 QA 視角精煉...\n")
 
     combined_features = []
 
     # 2. 一個個讀取、分析並收集
     for file_path in pending_files:
         file_name = os.path.basename(file_path)
-        print(f"📄 正在讀取文件: {file_name} ...")
+        print(f" 正在讀取文件: {file_name} ...")
 
         raw_text = extract_text_from_file(file_path)
         if not raw_text.strip():
-            print(f"⚠️ 檔案 {file_name} 內容為空或讀取失敗，跳過。")
+            print(f" 檔案 {file_name} 內容為空或讀取失敗，跳過。")
             continue
 
-        print(f"🤖 正在讓 AI 資深 QA 深度分析【功能說明】、【B1 規格審查】與【測試重點】...")
+        print(f" 正在讓 AI 資深 QA 深度分析【功能說明】、【B1 規格審查】與【測試重點】...")
         refined_text = await summarize_spec_via_ai(file_name, raw_text)
 
         if refined_text:
             combined_features.append(refined_text)
-            print(f"✅ {file_name} 精煉成功！")
+            print(f" {file_name} 精煉成功！")
         print("-" * 50)
 
     # 3. 雙向寫入 feature.md 與流水號的 B1_Spec_Review_vX.md
@@ -206,11 +206,11 @@ async def main():
         with open(b1_review_file, "w", encoding="utf-8") as f:
             f.write(final_markdown_content)
 
-        print(f"\n🎉 【全自動精煉完成】所有的 Spec 已成功被 QA 大腦分析完畢！")
-        print(f"📝 雙向同步寫入完成：")
+        print(f"\n【全自動精煉完成】所有的 Spec 已成功被 QA 大腦分析完畢！")
+        print(f" 雙向同步寫入完成：")
         print(f"   - {feature_file}")
         print(f"   - {b1_review_file}")
-        print(f"🚀 現在您可以放心地直接執行 `python3 ai_agents/generate_qase_bdd.py` 來批量產生案例並同步至 Qase！")
+        print(f" 現在您可以放心地直接執行 `python3 ai_agents/generate_qase_bdd.py` 來批量產生案例並同步至 Qase！")
 
 if __name__ == "__main__":
     asyncio.run(main())

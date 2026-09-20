@@ -3,17 +3,17 @@ import sys
 
 def run_script(script_path):
     print(f"\n==============================================")
-    print(f"🚀 正在啟動 Agent 引擎: {script_path}")
+    print(f" 正在啟動 Agent 引擎: {script_path}")
     print(f"==============================================")
     
     # 使用當前虛擬環境的 python 解釋器執行子腳本
     result = subprocess.run([sys.executable, script_path])
     
     if result.returncode != 0:
-        print(f"\n❌ 錯誤：執行 {script_path} 時發生異常，流程中斷。")
+        print(f"\n 錯誤：執行 {script_path} 時發生異常，流程中斷。")
         sys.exit(1)
     
-    print(f"✅ 完成：{script_path} 執行成功！\n")
+    print(f" 完成：{script_path} 執行成功！\n")
 
 def main():
     # 定義 0 到 4 號引擎的執行順序

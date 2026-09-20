@@ -21,7 +21,7 @@ def read_file_content(file_path):
         with open(file_path, "r", encoding="utf-8") as f:
             return f.read()
     except Exception as e:
-        print(f"❌ 讀取檔案 {file_path} 失敗: {e}")
+        print(f" 讀取檔案 {file_path} 失敗: {e}")
         return ""
 
 # =========================================================================
@@ -59,7 +59,7 @@ def find_latest_test_cases(docs_dir):
     # 依版本號排序，取最新的一個
     candidates.sort()
     latest_file = os.path.join(docs_dir, candidates[-1])
-    print(f"🔗 已自動對應關聯的 B2 測試案例檔案: {candidates[-1]}")
+    print(f" 已自動對應關聯的 B2 測試案例檔案: {candidates[-1]}")
     return read_file_content(latest_file)
 
 # =========================================================================
@@ -67,7 +67,7 @@ def find_latest_test_cases(docs_dir):
 # =========================================================================
 def collect_source_code(src_dir):
     if not os.path.exists(src_dir):
-        print(f"⚠️ 找不到程式碼資料夾: {src_dir}")
+        print(f" 找不到程式碼資料夾: {src_dir}")
         return ""
 
     code_contents = []
@@ -159,7 +159,7 @@ async def validate_code_against_spec(spec_text, test_cases_text, source_code):
 
         return content.strip()
     except Exception as e:
-        print(f"❌ AI 審查程式碼失敗: {e}")
+        print(f" AI 審查程式碼失敗: {e}")
         return ""
 
 # =========================================================================
@@ -184,21 +184,21 @@ async def main():
     source_code = collect_source_code(src_dir)
 
     if not spec_text:
-        print(f"❌ 找不到有效的 Spec 規範文件 ({spec_path})，請先執行 extract_specs_to_feature.py！")
+        print(f" 找不到有效的 Spec 規範文件 ({spec_path})，請先執行 extract_specs_to_feature.py！")
         return
 
     if not source_code:
-        print(f"❌ 未在 {src_dir} 目錄中找到任何原始碼 (.html, .js)，請確認 src/index.html 存在！")
+        print(f" 未在 {src_dir} 目錄中找到任何原始碼 (.html, .js)，請確認 src/index.html 存在！")
         return
 
-    print("🤖 正在呼叫 AI 進行程式碼與 B2 案例的雙向比對與 Bug 發掘...")
+    print(" 正在呼叫 AI 進行程式碼與 B2 案例的雙向比對與 Bug 發掘...")
     bug_report = await validate_code_against_spec(spec_text, test_cases_text, source_code)
 
     if bug_report:
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(bug_report)
-        print(f"✅ Bug Report 生成成功！已寫入至: {output_file}")
-        print(f"📄 可開啟 {output_file} 檢視產出結果（內含 B2 測試案例對應編號）。")
+        print(f" Bug Report 生成成功！已寫入至: {output_file}")
+        print(f" 可開啟 {output_file} 檢視產出結果（內含 B2 測試案例對應編號）。")
 
 if __name__ == "__main__":
     asyncio.run(main())

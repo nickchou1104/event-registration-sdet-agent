@@ -17,7 +17,7 @@ def reverse_engineer_prompt():
     with open(html_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    print("🤖 AI 正在分析前端程式碼以逆向反推 Prompt 歷史...")
+    print(" AI 正在分析前端程式碼以逆向反推 Prompt 歷史...")
 
     # 確保 GOOGLE_API_KEY 能正確對應給 GEMINI_API_KEY
     if "GOOGLE_API_KEY" in os.environ and "GEMINI_API_KEY" not in os.environ:
@@ -67,7 +67,7 @@ def reverse_engineer_prompt():
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(response.text)
 
-    print(f"✅ 成功逆向生成 Prompt 歷史記錄至: {output_path}")
+    print(f" 成功逆向生成 Prompt 歷史記錄至: {output_path}")
 
 if __name__ == "__main__":
     reverse_engineer_prompt()

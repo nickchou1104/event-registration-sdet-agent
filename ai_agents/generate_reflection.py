@@ -36,7 +36,7 @@ async def generate_reflection():
     b3_path = get_latest_file(docs_dir, "B3_Bug_Reports*.md")
     code_path = "src/index.html"
 
-    print(f"🔍 讀取上下文檔案中...")
+    print(f" 讀取上下文檔案中...")
     print(f"  - 規格文件: {b1_path}")
     print(f"  - Bug 報告: {b3_path}")
     print(f"  - 原始碼: {code_path}")
@@ -51,11 +51,6 @@ async def generate_reflection():
         model="gemini-2.5-flash", 
         google_api_key=os.getenv("GOOGLE_API_KEY")
     )
-
-    # llm = ChatGoogleGenerativeAI(
-    #     model="gemini-2.5-flash",
-    #     google_api_key=os.getenv("GOOGLE_API_KEY")
-    # )
 
     # 3. 建立反思報告 Prompt
     prompt = f"""
@@ -102,7 +97,7 @@ async def generate_reflection():
 請直接輸出最終 Markdown 內容，不要包含額外的說明文字。
 """
 
-    print("🤖 正在呼叫 AI 深度對比並生成 AI 協作反思報告 (C_Reflection)...")
+    print(" 正在呼叫 AI 深度對比並生成 AI 協作反思報告 (C_Reflection)...")
     response = await llm.ainvoke(prompt)
     
     # 4. 寫入 docs/C_Reflection_vX.md
@@ -110,7 +105,7 @@ async def generate_reflection():
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(response.content)
 
-    print(f"✅ 反思報告生成成功！已儲存至: {output_path}")
+    print(f" 反思報告生成成功！已儲存至: {output_path}")
 
 if __name__ == "__main__":
     import asyncio
