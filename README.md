@@ -18,8 +18,8 @@
 Event-Registration-SDET-Architecture/
 ├── src/
 │   └── index.html                           # Part A: AI 生成的前端待測程式碼
-├── prompts/
-│   └── prompt_history_v1.md                 # 引擎零自動逆向生成的 Prompt 歷史檔案
+├── prompts/ (生成檔自動儲存為 _v1, _v2...)
+│   └── prompt_history.md                    # 引擎零自動逆向生成的 Prompt 歷史檔案
 ├── ai_agents/ (SDET 自動化測試代理引擎)
 │   ├── run_pipeline.py                      # 總協調主控腳本 (一鍵自動執行 0 ~ 4 號引擎)
 │   ├── generate_prompt_history.py           # 引擎零：逆向分析 index.html 並自動產出 Prompt 歷史
