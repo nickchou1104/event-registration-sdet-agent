@@ -120,13 +120,13 @@ Test Case 自動化生成與 Qase 同步結果
 ## 如何執行待測系統
 1. 進入 `src` 目錄。
 2. 使用任一瀏覽器 (如 Chrome, Safari) 直接開啟 `index.html` 檔案。
-3. 即可開始依照 `B2_Test_Cases.md` 進行手動測試比對。
+3. 即可開始依照 `docs/B2_Test_Cases.md` 進行手動測試比對。
 
 ## 實際花費時間總結
-*   Part A (AI 詠唱與環境建置): 約 0.5 小時
-*   Part B (規格審查、案例設計與抓蟲): 約 1.5 小時
-*   Part C (反思撰寫與專案收尾): 約 1.0 小時
-*   **總計花費時間: 約 3 小時**
+*   Part A (AI 協作環境建置與系統生成): 約 0.5 小時
+*   Part B (規格審查、BDD 案例設計與 Qase API 串接): 約 1.5 小時
+*   Part C (自動化 Pipeline 實作、Bug Report 與反思報告): 約 1.0 小時
+*   **總計花費時間: 約 4.5 - 5.5 小時**
 
 
 <!-- # Automation
